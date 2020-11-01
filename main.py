@@ -66,9 +66,8 @@ def interpretName(name):
 	return ndict.get(name, name)
 
 while(True):
-	s = input().lower()	# Get user input
-	print(s)
-	s = s.split()
+	strr = input().lower()	# Get user input
+	s = strr.split()
 
 	if(s[0] == "set"):
 		character[interpretName(s[1])] = int(s[2])
@@ -83,7 +82,7 @@ while(True):
 	elif (s[0] == "attack") or (s[0] == "attacks") or (s[0] == "att") or (s[0] == "atk"):
 		if len(s) > 1:
 			for atk in attacks:
-				if s[1] in atk[0]:
+				if s[1] in atk[0].lower():
 					print( ("You attack with {0}! {1} to hit for {2} damage.").format(*[evalRolls(field) for field in atk]) )
 					# prevent multiple attacks from being shown
 		else:
@@ -93,9 +92,9 @@ while(True):
 				print( ("{0}: {1} to hit, {2} damage").format(*atk) )
 
 	# Interpret inputs
-	elif(s == "stats"):
+	elif s[0] == "stats":
 		showStats()
-	elif(s[0:5] == "eval "): # provides access to python evaluation without having to exit
-		print(eval(s[5:]))
-	elif any(str.isdigit(c) for c in s):
-		print(evalRolls(s))
+	elif s[0] == "eval": # provides access to python evaluation without having to exit
+		print(eval(strr[5:]))
+	else:
+		print(evalRolls(strr))
