@@ -17,6 +17,10 @@ character = {
 	"conditions": []
 }
 
+# all attacks of the form ["Name", "bonus to hit", "formula for damage"]
+attacks = [ ["Unarmed Strike", "5", "1d1 + 2"],
+            ["Longsword (1h)", "7", "1d8 + 4"]]
+
 def modFromStat(stat):
 	return (stat // 2) - 5
 
@@ -63,16 +67,30 @@ def interpretName(name):
 
 while(True):
 	s = input().lower()	# Get user input
+	print(s)
+	s = s.split()
 
-	if(s[0:4] == "set "):
-		s = s[4:]
-		s = s.split()
-		character[interpretName(s[0])] = int(s[1])
+	if(s[0] == "set"):
+		character[interpretName(s[1])] = int(s[2])
 
-	elif(s[0:4] == "get "):
-		s = s[4:]
-		s = s.split()
-		print(str(character[interpretName(s[0])]))
+	elif(s[0] == "get"):
+		print(str(character[interpretName(s[1])]))
+
+	elif(s[0] == "add"):
+		if (s[1] == "cond") or (s[1] == "condition"):
+			character[conditions].append(s[1])
+
+	elif (s[0] == "attack") or (s[0] == "attacks") or (s[0] == "att") or (s[0] == "atk"):
+		if len(s) > 1:
+			for atk in attacks:
+				if s[1] in atk[0]:
+					print( ("You attack with {0}! {1} to hit for {2} damage.").format(*[evalRolls(field) for field in atk]) )
+					# prevent multiple attacks from being shown
+		else:
+			for atk in attacks:
+				if atk[1][0] != '-':
+					atk[1] = ('+' + atk[1])
+				print( ("{0}: {1} to hit, {2} damage").format(*atk) )
 
 	# Interpret inputs
 	elif(s == "stats"):

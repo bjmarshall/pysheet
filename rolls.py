@@ -3,6 +3,11 @@ import re
 
 def roll(word):
 
+	#parts = word.split('+')
+
+
+
+
 	parts = word.split("d") # "XdY" becomes ("x", "y") and "XdY+Z" becomes ("X", "Y+Z")
 
 	numDice = int(parts[0])
