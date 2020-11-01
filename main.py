@@ -19,7 +19,11 @@ character = {
 
 # all attacks of the form ["Name", "bonus to hit", "formula for damage"]
 attacks = [ ["Unarmed Strike", "5", "1d1 + 2"],
-            ["Longsword (1h)", "7", "1d8 + 4"]]
+            ["Longsword (1h)", "7", "1d8 + 4"],
+			["Longsword (2h)", "7", "1d10 + 4"]]
+
+# dictionary in {itemname, count} format
+inventory = {}
 
 def modFromStat(stat):
 	return (stat // 2) - 5
@@ -55,6 +59,11 @@ def showStats():
 	if character["death saves"] != [0,0]:
 		ret += "Death saves: {0} successes, {1} failures.".format(character["death saves"][0], character["death saves"][1])
 
+	ret += "\n"
+
+	for item in inventory:
+		print( "{0} ({1})".format(item, inventory[item]) )
+
 	print(ret)
 
 # Translates names to the dictionary key that accesses a field. This way, "str" and "strength" can access the same field.
@@ -78,6 +87,20 @@ while(True):
 	elif(s[0] == "add"):
 		if (s[1] == "cond") or (s[1] == "condition"):
 			character[conditions].append(s[1])
+		if (s[1] == "item" or (s[1] == "inventory") or (s[1] == "inv")):
+			if len(s) > 2:
+				inventory[s[2]] = inventory.get(s[2], 0) + int(s[3])
+			else:
+				inventory[s[2]] = inventory.get(s[2], 0) + 1
+
+	elif (s[0] == "del") or (s[0] == "delete") or (s[0] == "remove") or (s[0] == "rem") or (s[0] == "rm") or (s[0] == "x"):
+		if (s[1] == "item" or (s[1] == "inventory") or (s[1] == "inv")):
+			if len(s) > 2:
+				inventory[s[2]] = inventory.get(s[2], 0) - int(s[3])
+				if inventory[s[2]] == 0:
+					inventory.pop(s[2])
+			else:
+				inventory[s[2]] = inventory.get(s[2], 0) - 1
 
 	elif (s[0] == "attack") or (s[0] == "attacks") or (s[0] == "att") or (s[0] == "atk"):
 		if len(s) > 1:
